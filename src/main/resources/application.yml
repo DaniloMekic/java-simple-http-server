@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: "Simple HTTP Server in Java"
+
+logging:
+  file:
+    name: log/trace.log
