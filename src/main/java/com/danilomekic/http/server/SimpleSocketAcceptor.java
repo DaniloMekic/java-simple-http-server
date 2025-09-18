@@ -3,10 +3,11 @@ package com.danilomekic.http.server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.logging.Handler;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.danilomekic.http.server.handler.ConnectionHandler;
 
 public class SimpleSocketAcceptor implements SocketAcceptor {
     private static final Logger LOGGER = LoggerFactory.getLogger(SimpleSocketAcceptor.class);
