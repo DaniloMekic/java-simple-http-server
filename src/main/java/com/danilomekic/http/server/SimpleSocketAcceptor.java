@@ -17,9 +17,14 @@ public class SimpleSocketAcceptor implements SocketAcceptor {
     private ConnectionHandler connectionHandler;
 
     @Override
-    public void start(int port, ConnectionHandler connectionHandler) throws IOException {
+    public void start(int port, ConnectionHandler connectionHandler) throws IOException, IllegalArgumentException {
         LOGGER.info("Initializing server socket");
+
+        if (connectionHandler == null) {
+            throw new IllegalArgumentException("ConnectionHandler cannot be null");
+        }
         this.connectionHandler = connectionHandler;
+
         this.serverSocket = new ServerSocket(port);
         LOGGER.info("Server socket initialized on port {}", port);
         this.isRunning = true;
