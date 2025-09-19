@@ -1,8 +1,6 @@
-package com.danilomekic.http.server.handler;
+package com.danilomekic.http.server;
 
 import java.net.Socket;
-
-import com.danilomekic.http.server.handler.ConnectionHandler;
 
 public class HttpConnectionHandler implements ConnectionHandler {
 
