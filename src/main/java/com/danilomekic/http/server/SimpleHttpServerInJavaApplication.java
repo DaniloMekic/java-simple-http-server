@@ -7,9 +7,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import com.danilomekic.http.server.handler.ConnectionHandler;
-import com.danilomekic.http.server.handler.HttpConnectionHandler;
-
 @SpringBootApplication
 public class SimpleHttpServerInJavaApplication {
     private final static Logger LOGGER = LoggerFactory.getLogger(SimpleHttpServerInJavaApplication.class);
