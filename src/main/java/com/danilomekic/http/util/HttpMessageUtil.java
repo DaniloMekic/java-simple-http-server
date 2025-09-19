@@ -1,9 +1,12 @@
 package com.danilomekic.http.util;
 
+import java.util.Arrays;
 import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.danilomekic.http.model.Method;
 
 /*
  * RFC 9110
@@ -36,5 +39,13 @@ public class HttpMessageUtil {
         return fieldName
             .chars()
             .allMatch(c -> c >= 0x21 && c <= 0x7E && !DELIMITERS.contains((char) c));
+    }
+
+    public static boolean isValidMethod(String methodName) {
+        return Arrays
+            .stream(Method.values())
+            .map(Method::name)
+            .anyMatch(methodName::equals);
+        
     }
 }
