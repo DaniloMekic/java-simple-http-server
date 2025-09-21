@@ -19,7 +19,8 @@ public class SimpleHttpServerInJavaApplication {
 
         try {
             LOGGER.info("Initializing socket acceptor");
-            socketAcceptor.start(8090, connectionHandler);
+            socketAcceptor.setConnectionHandler(connectionHandler);
+            socketAcceptor.start(8090);
         } catch (IOException e) {
             LOGGER.error("Failed to initialize socket acceptor");
         }
