@@ -1,7 +1,9 @@
 package com.danilomekic.http.util;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +33,15 @@ public class HttpMessageUtil {
         return Character.UnicodeBlock.of(codePoint) == Character.UnicodeBlock.BASIC_LATIN;
     }
 
+    /*
+     * Tokens are short textual identifiers that do not include whitespace or delimiters.
+     * token          = 1*tchar
+     *
+     * tchar          = "!" / "#" / "$" / "%" / "&" / "'" / "*"
+     *                  / "+" / "-" / "." / "^" / "_" / "`" / "|" / "~"
+     *                  / DIGIT / ALPHA
+     *                  ; any VCHAR, except delimiters
+    */
     public static boolean isValidToken(String fieldName) {
         if (fieldName == null || fieldName.isEmpty()) {
             return false;
@@ -47,5 +58,13 @@ public class HttpMessageUtil {
             .map(Method::name)
             .anyMatch(methodName::equals);
         
+    }
+
+    public static List<String> getFieldValuesList(String fieldValue) {
+        return Arrays
+            .stream(fieldValue.split(","))
+            .filter(s -> !s.isBlank())
+            .map(String::trim)
+            .collect(Collectors.toList());
     }
 }
