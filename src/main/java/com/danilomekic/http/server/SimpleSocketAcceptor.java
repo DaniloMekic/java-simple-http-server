@@ -14,6 +14,12 @@ public class SimpleSocketAcceptor implements SocketAcceptor {
     private volatile boolean isRunning;
     private ConnectionHandler connectionHandler;
 
+    public SimpleSocketAcceptor() {}
+
+    public SimpleSocketAcceptor(ConnectionHandler connectionHandler) {
+        this.connectionHandler = connectionHandler;
+    }
+
     @Override
     public void start(int port) throws IOException, IllegalArgumentException {
         LOGGER.info("Initializing server socket");

@@ -14,12 +14,11 @@ public class SimpleHttpServerInJavaApplication {
     public static void main(String[] args) {
         SpringApplication.run(SimpleHttpServerInJavaApplication.class, args);
 
-        SocketAcceptor socketAcceptor = new SimpleSocketAcceptor();
         ConnectionHandler connectionHandler = new HttpConnectionHandler();
+        SocketAcceptor socketAcceptor = new SimpleSocketAcceptor(connectionHandler);
 
         try {
             LOGGER.info("Initializing socket acceptor");
-            socketAcceptor.setConnectionHandler(connectionHandler);
             socketAcceptor.start(8090);
         } catch (IOException e) {
             LOGGER.error("Failed to initialize socket acceptor");
