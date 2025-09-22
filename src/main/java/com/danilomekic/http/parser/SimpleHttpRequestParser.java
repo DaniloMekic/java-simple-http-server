@@ -1,9 +1,7 @@
 package com.danilomekic.http.parser;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,15 +22,14 @@ public class SimpleHttpRequestParser implements HttpRequestParser {
 
     @Override
     public HttpRequest parse(InputStream inputStream) throws IOException {
-        requestLine = parseRequestLine(inputStream);
-        requestHeaders = parseRequestHeaders(inputStream);
-        requestBody = parseRequestBody(inputStream);
+        parseRequestLine(inputStream);
+        parseRequestHeaders(inputStream);
+        parseRequestBody(inputStream);
 
         return new HttpRequest(requestLine[0], requestLine[1], requestLine[2], requestHeaders, requestBody);
     }
 
-    private String[] parseRequestLine(InputStream inputStream) {
-        String[] requestLine;
+    private void parseRequestLine(InputStream inputStream) {
         StringBuilder requestLineBuilder = new StringBuilder();
         boolean isPreviousCharacterCR = false;
         int byteRead = -1;
@@ -62,30 +59,31 @@ public class SimpleHttpRequestParser implements HttpRequestParser {
             requestLineBuilder.appendCodePoint(byteRead);
         }
 
-        requestLine = requestLineBuilder.toString().split("\s", 3);
+        this.requestLine = requestLineBuilder.toString().split("\s", 3);
 
-        if (HttpMessageUtil.isValidMethod(requestLine[0])) {
-            return requestLine;
-        } else {
+        if (HttpMessageUtil.isValidMethod(this.requestLine[0]) == false) {
             throw new BadRequestException("Invalid request method name");
         }
     }
 
-    private Map<String, List<String>> parseRequestHeaders(InputStream inputStream) {
-        Map<String, List<String>> requestHeaders = new HashMap<>();
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+    private void parseRequestHeaders(InputStream inputStream) {
+        this.requestHeaders = new HashMap<>();
 
         String fieldLine;
         String fieldName;
         String fieldValue;
+        int colonIndex = -1;
 
         try {
-            while ((fieldLine = bufferedReader.readLine()) != null) {
-                if (fieldLine.isEmpty()) {
+            while (true) {
+                fieldLine = parseFieldLine(inputStream);
+                LOGGER.debug("Field line: {}", fieldLine);
+
+                if (fieldLine == null || fieldLine.isEmpty()) {
                     break; // End of headers
                 }
 
-                int colonIndex = fieldLine.indexOf(':');
+                colonIndex = fieldLine.indexOf(':');
                 if (colonIndex == -1) {
                     throw new BadRequestException("HTTP header does not contain colon character");
                 }
@@ -100,32 +98,54 @@ public class SimpleHttpRequestParser implements HttpRequestParser {
 
                 fieldValue = fieldLine
                     .substring(colonIndex + 1)
-                    .trim()
-                    .toLowerCase();
+                    .trim();
 
-                requestHeaders
+                this.requestHeaders
                     .computeIfAbsent(fieldName, key -> new ArrayList<>())
                     .addAll(HttpMessageUtil.getFieldValuesList(fieldValue));
             }
+            
         } catch (Exception e) {
             LOGGER.error("Failed to read header line: {}", e);
         }
-
-        try {
-            bufferedReader.close();
-        } catch (Exception e) {
-            LOGGER.error("Failed to close buffered reader for headers: {}", e);
-        }
-
-        return requestHeaders;
     }
 
-    private byte[] parseRequestBody(InputStream inputStream) {
-        byte[] bodyBytes = null;
+    private String parseFieldLine(InputStream inputStream) throws IOException {
+        StringBuilder lineFromStream = new StringBuilder();
+        boolean previousChatWasCR = false;
+        int byteRead;
+
+        while ((byteRead = inputStream.read()) != -1) {
+            if (byteRead == 10 && previousChatWasCR) { // LF after CR
+                break;
+            }
+
+            // CR
+            if (byteRead == 13) {
+                previousChatWasCR = true;
+                continue;
+            }
+
+            // CR not folowed by LF
+            if (previousChatWasCR) {
+                lineFromStream.append((char) 13);
+                previousChatWasCR = false;
+            }
+
+            lineFromStream.append((char) byteRead);
+        }
+
+        return lineFromStream.length() == 0 && byteRead == -1
+            ? null
+            : lineFromStream.toString();
+        
+    }
+
+    private void parseRequestBody(InputStream inputStream) {
         int contentLength = Integer.parseInt(requestHeaders.get("content-length").getFirst());
 
         try {
-            inputStream.read(bodyBytes, 0, contentLength);
+            inputStream.read(this.requestBody, 0, contentLength);
         } catch (Exception e) {
             LOGGER.error("Failed to read body bytes: {}", e);
         }
@@ -135,7 +155,5 @@ public class SimpleHttpRequestParser implements HttpRequestParser {
         } catch (Exception e) {
             LOGGER.error("Failed to close stream for body bytes: {}", e);
         }
-
-        return bodyBytes;
     }
 }
