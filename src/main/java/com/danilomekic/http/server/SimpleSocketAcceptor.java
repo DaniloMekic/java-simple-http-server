@@ -24,7 +24,7 @@ public class SimpleSocketAcceptor implements SocketAcceptor {
     public void start(int port) throws IOException, IllegalArgumentException {
         LOGGER.info("Initializing server socket");
 
-        if (connectionHandler == null) {
+        if (this.connectionHandler == null) {
             throw new IllegalArgumentException("ConnectionHandler cannot be null");
         }
 
