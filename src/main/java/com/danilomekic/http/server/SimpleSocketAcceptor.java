@@ -21,7 +21,6 @@ public class SimpleSocketAcceptor implements SocketAcceptor {
         if (connectionHandler == null) {
             throw new IllegalArgumentException("ConnectionHandler cannot be null");
         }
-        this.connectionHandler = connectionHandler;
 
         this.serverSocket = new ServerSocket(port);
         LOGGER.info("Server socket initialized on port {}", port);
