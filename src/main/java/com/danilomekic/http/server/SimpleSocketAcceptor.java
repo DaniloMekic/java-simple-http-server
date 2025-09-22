@@ -15,7 +15,7 @@ public class SimpleSocketAcceptor implements SocketAcceptor {
     private ConnectionHandler connectionHandler;
 
     @Override
-    public void start(int port, ConnectionHandler connectionHandler) throws IOException, IllegalArgumentException {
+    public void start(int port) throws IOException, IllegalArgumentException {
         LOGGER.info("Initializing server socket");
 
         if (connectionHandler == null) {
@@ -50,6 +50,11 @@ public class SimpleSocketAcceptor implements SocketAcceptor {
         } catch (Exception e) {
             LOGGER.error("Failed to close server socket: {}", e);
         }
+    }
+
+    @Override
+    public void setConnectionHandler(ConnectionHandler connectionHandler) {
+        this.connectionHandler = connectionHandler;
     }
 
     @Override
