@@ -180,7 +180,7 @@ public class SimpleHttpRequestParser implements HttpRequestParser {
             // Read exactly Content-Length bytes
             while (totalBytesRead < contentLength) {
                 int bytesRead = inputStream.read(this.requestBody, totalBytesRead, contentLength - totalBytesRead);
-                if (bytesRead != -1) {
+                if (bytesRead == -1) {
                     throw new BadRequestException("Unexpected end of stream while reading request body");
                 }
                 totalBytesRead += bytesRead;
