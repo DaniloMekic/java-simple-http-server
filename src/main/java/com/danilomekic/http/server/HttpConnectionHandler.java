@@ -7,12 +7,12 @@ import java.net.Socket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.danilomekic.http.model.HttpRequest;
-import com.danilomekic.http.model.HttpResponse;
-import com.danilomekic.http.parser.HttpRequestParser;
-import com.danilomekic.http.parser.SimpleHttpRequestParser;
-import com.danilomekic.http.writer.HttpResponseWriter;
-import com.danilomekic.http.writer.SimpleHttpResponseWriter;
+import com.danilomekic.http.server.model.HttpRequest;
+import com.danilomekic.http.server.model.HttpResponse;
+import com.danilomekic.http.server.parser.HttpRequestParser;
+import com.danilomekic.http.server.parser.SimpleHttpRequestParser;
+import com.danilomekic.http.server.writer.HttpResponseWriter;
+import com.danilomekic.http.server.writer.SimpleHttpResponseWriter;
 
 public class HttpConnectionHandler implements ConnectionHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(HttpConnectionHandler.class);

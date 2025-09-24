@@ -1,4 +1,4 @@
-package com.danilomekic.http.parser;
+package com.danilomekic.http.server.parser;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,8 +10,8 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.danilomekic.http.model.HttpRequest;
-import com.danilomekic.http.util.HttpMessageUtil;
+import com.danilomekic.http.server.model.HttpRequest;
+import com.danilomekic.http.server.util.HttpMessageUtil;
 
 public class SimpleHttpRequestParser implements HttpRequestParser {
     private static final Logger LOGGER = LoggerFactory.getLogger(SimpleHttpRequestParser.class);

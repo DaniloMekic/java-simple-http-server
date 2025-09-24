@@ -1,4 +1,4 @@
-package com.danilomekic.http.model;
+package com.danilomekic.http.server.model;
 
 import java.util.List;
 import java.util.Map;

@@ -1,4 +1,4 @@
-package com.danilomekic.http.writer;
+package com.danilomekic.http.server.writer;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -7,7 +7,7 @@ import java.net.SocketException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.danilomekic.http.model.HttpResponse;
+import com.danilomekic.http.server.model.HttpResponse;
 
 public class SimpleHttpResponseWriter implements HttpResponseWriter {
     private static final Logger LOGGER = LoggerFactory.getLogger(SimpleHttpResponseWriter.class);
