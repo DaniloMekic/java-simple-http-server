@@ -68,7 +68,7 @@ public class SimpleHttpRequestParser implements HttpRequestParser {
             throw new BadRequestException("Unexpected end of stream while parsing request-line");
         }
 
-        this.requestLine = requestLineBuilder.toString().split("\s", 3);
+        this.requestLine = requestLineBuilder.toString().split("\\s", 3);
 
         if (this.requestLine.length != 3) {
             throw new BadRequestException("Invalid request-line structure. Should be tripartite: <Method> <Target> <Version>");
