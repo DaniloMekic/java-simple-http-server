@@ -10,15 +10,18 @@ import org.slf4j.LoggerFactory;
 import com.danilomekic.http.server.model.HttpRequest;
 import com.danilomekic.http.server.model.HttpResponse;
 import com.danilomekic.http.server.parser.HttpRequestParser;
-import com.danilomekic.http.server.parser.SimpleHttpRequestParser;
 import com.danilomekic.http.server.writer.HttpResponseWriter;
-import com.danilomekic.http.server.writer.SimpleHttpResponseWriter;
 
 public class HttpConnectionHandler implements ConnectionHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(HttpConnectionHandler.class);
 
-    private final HttpRequestParser httpRequestParser = new SimpleHttpRequestParser();
-    private final HttpResponseWriter httpResponseWriter = new SimpleHttpResponseWriter();
+    private final HttpRequestParser httpRequestParser;
+    private final HttpResponseWriter httpResponseWriter;
+
+    public HttpConnectionHandler(HttpRequestParser httpRequestParser, HttpResponseWriter httpResponseWriter) {
+        this.httpRequestParser = httpRequestParser;
+        this.httpResponseWriter = httpResponseWriter;
+    }
 
     @Override
     public void handle(Socket socket) {

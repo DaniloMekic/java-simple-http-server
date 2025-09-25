@@ -7,6 +7,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import com.danilomekic.http.server.parser.SimpleHttpRequestParser;
+import com.danilomekic.http.server.writer.SimpleHttpResponseWriter;
+
 @SpringBootApplication
 public class SimpleHttpServerInJavaApplication {
     private final static Logger LOGGER = LoggerFactory.getLogger(SimpleHttpServerInJavaApplication.class);
@@ -14,7 +17,7 @@ public class SimpleHttpServerInJavaApplication {
     public static void main(String[] args) {
         SpringApplication.run(SimpleHttpServerInJavaApplication.class, args);
 
-        ConnectionHandler connectionHandler = new HttpConnectionHandler();
+        ConnectionHandler connectionHandler = new HttpConnectionHandler(new SimpleHttpRequestParser(), new SimpleHttpResponseWriter());
         SocketAcceptor socketAcceptor = new SimpleSocketAcceptor(connectionHandler);
 
         try {
