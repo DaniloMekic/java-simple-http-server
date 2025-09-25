@@ -17,7 +17,10 @@ public class SimpleHttpServerInJavaApplication {
     public static void main(String[] args) {
         SpringApplication.run(SimpleHttpServerInJavaApplication.class, args);
 
-        ConnectionHandler connectionHandler = new HttpConnectionHandler(new SimpleHttpRequestParser(), new SimpleHttpResponseWriter());
+        ConnectionHandler connectionHandler = new HttpConnectionHandler(
+            new SimpleHttpRequestParser(),
+            new SimpleHttpResponseWriter()
+        );
         SocketAcceptor socketAcceptor = new SimpleSocketAcceptor(connectionHandler);
 
         try {
