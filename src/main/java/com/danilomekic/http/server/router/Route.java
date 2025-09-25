@@ -5,5 +5,5 @@ import com.danilomekic.http.server.model.HttpResponse;
 
 public interface Route {
     boolean matches(HttpRequest httpRequest);
-    void handle(HttpRequest httpRequest, HttpResponse httpResponse);
+    HttpResponse handle(HttpRequest httpRequest);
 }
