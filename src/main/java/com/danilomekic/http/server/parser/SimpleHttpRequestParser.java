@@ -2,6 +2,8 @@ package com.danilomekic.http.server.parser;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,12 +23,12 @@ public class SimpleHttpRequestParser implements HttpRequestParser {
     byte[] requestBody;
 
     @Override
-    public HttpRequest parse(InputStream inputStream) throws IOException {
+    public HttpRequest parse(InputStream inputStream) throws IOException, URISyntaxException {
         parseRequestLine(inputStream);
         parseRequestHeaders(inputStream);
         parseRequestBody(inputStream);
 
-        return new HttpRequest(requestLine[0], requestLine[1], requestLine[2], requestHeaders, requestBody);
+        return new HttpRequest(requestLine[0], new URI(requestLine[1]), requestLine[2], requestHeaders, requestBody);
     }
 
     private void parseRequestLine(InputStream inputStream) throws IOException {
