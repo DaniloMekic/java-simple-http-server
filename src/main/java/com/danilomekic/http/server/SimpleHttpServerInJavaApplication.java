@@ -8,6 +8,9 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.danilomekic.http.server.parser.SimpleHttpRequestParser;
+import com.danilomekic.http.server.router.HelloRoute;
+import com.danilomekic.http.server.router.Router;
+import com.danilomekic.http.server.router.SimpleRouter;
 import com.danilomekic.http.server.writer.SimpleHttpResponseWriter;
 
 @SpringBootApplication
@@ -17,8 +20,12 @@ public class SimpleHttpServerInJavaApplication {
     public static void main(String[] args) {
         SpringApplication.run(SimpleHttpServerInJavaApplication.class, args);
 
+        Router httpRequestRouter = new SimpleRouter();
+        httpRequestRouter.addRoute(new HelloRoute());
+
         ConnectionHandler connectionHandler = new HttpConnectionHandler(
             new SimpleHttpRequestParser(),
+            httpRequestRouter,
             new SimpleHttpResponseWriter()
         );
         SocketAcceptor socketAcceptor = new SimpleSocketAcceptor(connectionHandler);

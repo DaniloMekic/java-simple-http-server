@@ -10,16 +10,19 @@ import org.slf4j.LoggerFactory;
 import com.danilomekic.http.server.model.HttpRequest;
 import com.danilomekic.http.server.model.HttpResponse;
 import com.danilomekic.http.server.parser.HttpRequestParser;
+import com.danilomekic.http.server.router.Router;
 import com.danilomekic.http.server.writer.HttpResponseWriter;
 
 public class HttpConnectionHandler implements ConnectionHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(HttpConnectionHandler.class);
 
     private final HttpRequestParser httpRequestParser;
+    private final Router httpRequestRouter;
     private final HttpResponseWriter httpResponseWriter;
 
-    public HttpConnectionHandler(HttpRequestParser httpRequestParser, HttpResponseWriter httpResponseWriter) {
+    public HttpConnectionHandler(HttpRequestParser httpRequestParser, Router httpRequestRouter, HttpResponseWriter httpResponseWriter) {
         this.httpRequestParser = httpRequestParser;
+        this.httpRequestRouter = httpRequestRouter;
         this.httpResponseWriter = httpResponseWriter;
     }
 
@@ -33,7 +36,10 @@ public class HttpConnectionHandler implements ConnectionHandler {
 
             HttpRequest httpRequest = httpRequestParser.parse(socketInputStream);
 
-            HttpResponse httpResponse = new HttpResponse(200, "OK", "plain/text", null);
+            HttpResponse httpResponse = httpRequestRouter
+                .findMatchingRoute(httpRequest)
+                .map(route -> route.handle(httpRequest))
+                .orElse(new HttpResponse(404, "Not Found", "text/plain", "404 Not Found".getBytes()));
 
             httpResponseWriter.write(httpResponse, socketOutputStream);
         } catch (Exception e) {
