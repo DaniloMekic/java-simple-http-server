@@ -7,16 +7,16 @@ import java.util.Optional;
 import com.danilomekic.http.server.model.HttpRequest;
 
 public class SimpleRouter implements Router {
-    private final List<Route> httpRequestRoutes = new ArrayList<>();
+    private final List<Route> requestRoutes = new ArrayList<>();
 
     @Override
     public void addRoute(Route newRoute) {
-        httpRequestRoutes.add(newRoute);
+        requestRoutes.add(newRoute);
     }
 
     @Override
     public Optional<Route> findMatchingRoute(HttpRequest httpRequest) {
-        return httpRequestRoutes
+        return requestRoutes
             .stream()
             .filter(route -> route.matches(httpRequest))
             .findFirst();
