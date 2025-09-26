@@ -11,16 +11,16 @@ import com.danilomekic.http.server.model.HttpRequest;
 import com.danilomekic.http.server.model.HttpResponse;
 import com.danilomekic.http.server.parser.RequestParser;
 import com.danilomekic.http.server.router.Router;
-import com.danilomekic.http.server.writer.HttpResponseWriter;
+import com.danilomekic.http.server.writer.ResponseWriter;
 
 public class SimpleConnectionHandler implements ConnectionHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(SimpleConnectionHandler.class);
 
     private final RequestParser httpRequestParser;
     private final Router httpRequestRouter;
-    private final HttpResponseWriter httpResponseWriter;
+    private final ResponseWriter httpResponseWriter;
 
-    public SimpleConnectionHandler(RequestParser httpRequestParser, Router httpRequestRouter, HttpResponseWriter httpResponseWriter) {
+    public SimpleConnectionHandler(RequestParser httpRequestParser, Router httpRequestRouter, ResponseWriter httpResponseWriter) {
         this.httpRequestParser = httpRequestParser;
         this.httpRequestRouter = httpRequestRouter;
         this.httpResponseWriter = httpResponseWriter;

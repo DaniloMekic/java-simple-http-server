@@ -5,6 +5,6 @@ import java.io.OutputStream;
 
 import com.danilomekic.http.server.model.HttpResponse;
 
-public interface HttpResponseWriter {
+public interface ResponseWriter {
     void write(HttpResponse httpResponse, OutputStream outputStream) throws IOException;
 }

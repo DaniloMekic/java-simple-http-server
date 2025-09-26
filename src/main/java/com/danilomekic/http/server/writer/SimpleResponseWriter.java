@@ -9,8 +9,8 @@ import org.slf4j.LoggerFactory;
 
 import com.danilomekic.http.server.model.HttpResponse;
 
-public class SimpleHttpResponseWriter implements HttpResponseWriter {
-    private static final Logger LOGGER = LoggerFactory.getLogger(SimpleHttpResponseWriter.class);
+public class SimpleResponseWriter implements ResponseWriter {
+    private static final Logger LOGGER = LoggerFactory.getLogger(SimpleResponseWriter.class);
 
     @Override
     public void write(HttpResponse httpResponse, OutputStream outputStream) throws IOException {

@@ -11,7 +11,7 @@ import com.danilomekic.http.server.parser.SimpleRequestParser;
 import com.danilomekic.http.server.router.HelloRoute;
 import com.danilomekic.http.server.router.Router;
 import com.danilomekic.http.server.router.SimpleRouter;
-import com.danilomekic.http.server.writer.SimpleHttpResponseWriter;
+import com.danilomekic.http.server.writer.SimpleResponseWriter;
 
 @SpringBootApplication
 public class SimpleHttpServerInJavaApplication {
@@ -26,7 +26,7 @@ public class SimpleHttpServerInJavaApplication {
         ConnectionHandler connectionHandler = new SimpleConnectionHandler(
             new SimpleRequestParser(),
             httpRequestRouter,
-            new SimpleHttpResponseWriter()
+            new SimpleResponseWriter()
         );
         SocketAcceptor socketAcceptor = new SimpleSocketAcceptor(connectionHandler);
 
