@@ -15,8 +15,8 @@ import org.slf4j.LoggerFactory;
 import com.danilomekic.http.server.model.HttpRequest;
 import com.danilomekic.http.server.util.HttpMessageUtil;
 
-public class SimpleHttpRequestParser implements HttpRequestParser {
-    private static final Logger LOGGER = LoggerFactory.getLogger(SimpleHttpRequestParser.class);
+public class SimpleRequestParser implements RequestParser {
+    private static final Logger LOGGER = LoggerFactory.getLogger(SimpleRequestParser.class);
 
     String[] requestLine;
     Map<String, List<String>> requestHeaders;

@@ -6,6 +6,6 @@ import java.net.URISyntaxException;
 
 import com.danilomekic.http.server.model.HttpRequest;
 
-public interface HttpRequestParser {
+public interface RequestParser {
     HttpRequest parse(InputStream inputStream) throws IOException, URISyntaxException;
 }

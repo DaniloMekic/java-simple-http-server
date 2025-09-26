@@ -9,18 +9,18 @@ import org.slf4j.LoggerFactory;
 
 import com.danilomekic.http.server.model.HttpRequest;
 import com.danilomekic.http.server.model.HttpResponse;
-import com.danilomekic.http.server.parser.HttpRequestParser;
+import com.danilomekic.http.server.parser.RequestParser;
 import com.danilomekic.http.server.router.Router;
 import com.danilomekic.http.server.writer.HttpResponseWriter;
 
 public class SimpleConnectionHandler implements ConnectionHandler {
     private static final Logger LOGGER = LoggerFactory.getLogger(SimpleConnectionHandler.class);
 
-    private final HttpRequestParser httpRequestParser;
+    private final RequestParser httpRequestParser;
     private final Router httpRequestRouter;
     private final HttpResponseWriter httpResponseWriter;
 
-    public SimpleConnectionHandler(HttpRequestParser httpRequestParser, Router httpRequestRouter, HttpResponseWriter httpResponseWriter) {
+    public SimpleConnectionHandler(RequestParser httpRequestParser, Router httpRequestRouter, HttpResponseWriter httpResponseWriter) {
         this.httpRequestParser = httpRequestParser;
         this.httpRequestRouter = httpRequestRouter;
         this.httpResponseWriter = httpResponseWriter;

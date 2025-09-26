@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import com.danilomekic.http.server.parser.SimpleHttpRequestParser;
+import com.danilomekic.http.server.parser.SimpleRequestParser;
 import com.danilomekic.http.server.router.HelloRoute;
 import com.danilomekic.http.server.router.Router;
 import com.danilomekic.http.server.router.SimpleRouter;
@@ -24,7 +24,7 @@ public class SimpleHttpServerInJavaApplication {
         httpRequestRouter.addRoute(new HelloRoute());
 
         ConnectionHandler connectionHandler = new SimpleConnectionHandler(
-            new SimpleHttpRequestParser(),
+            new SimpleRequestParser(),
             httpRequestRouter,
             new SimpleHttpResponseWriter()
         );
