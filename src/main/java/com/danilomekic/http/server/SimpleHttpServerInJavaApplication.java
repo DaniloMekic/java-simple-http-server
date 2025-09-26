@@ -23,7 +23,7 @@ public class SimpleHttpServerInJavaApplication {
         Router httpRequestRouter = new SimpleRouter();
         httpRequestRouter.addRoute(new HelloRoute());
 
-        ConnectionHandler connectionHandler = new HttpConnectionHandler(
+        ConnectionHandler connectionHandler = new SimpleConnectionHandler(
             new SimpleHttpRequestParser(),
             httpRequestRouter,
             new SimpleHttpResponseWriter()
