@@ -1,7 +1,7 @@
 # Simple HTTP Server in Java
 ## Flowchart
 ```mermaid
-flowchart LR
+flowchart TD
     A[SocketAcceptor] --> B[ConnectionHandler]
     B --> C[RequestParser]
     C --> D[Router]
