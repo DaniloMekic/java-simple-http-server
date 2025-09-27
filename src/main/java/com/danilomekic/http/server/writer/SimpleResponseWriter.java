@@ -15,13 +15,13 @@ public class SimpleResponseWriter implements ResponseWriter {
     @Override
     public void write(HttpResponse httpResponse, OutputStream outputStream) throws IOException {
         try {
-            LOGGER.debug("Writing HTTP Response");
-
             StringBuilder httpResponseBuilder = new StringBuilder();
+
             httpResponseBuilder
-                .append("HTTP/1.1 ")
+                .append(httpResponse.httpVersion().toString())
+                .append("\s")
                 .append(httpResponse.statusCode())
-                .append(" ")
+                .append("\s")
                 .append(httpResponse.reasonPhrase())
                 .append("\r\n");
 

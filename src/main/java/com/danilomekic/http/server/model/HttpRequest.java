@@ -14,4 +14,4 @@ import java.util.Map;
  * <CR> = \u000D | 13 | 0x0D | 0o15 | 0b00001101
  * <LF> = \u000A | 10 | 0x0A | 0o12 | 0b00001010
 */
-public record HttpRequest(String requestMethod, URI requestTarget, String httpVersion, Map<String, List<String>> requestHeaders, byte[] requestBody) {}
+public record HttpRequest(Method requestMethod, URI requestTarget, HttpVersion httpVersion, Map<String, List<String>> requestHeaders, byte[] requestBody) {}

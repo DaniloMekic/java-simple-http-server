@@ -7,7 +7,9 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.graphql.GraphQlProperties.Http;
 
+import com.danilomekic.http.server.model.HttpVersion;
 import com.danilomekic.http.server.model.Method;
 
 /*
@@ -58,6 +60,13 @@ public class HttpMessageUtil {
             .map(Method::name)
             .anyMatch(methodName::equals);
         
+    }
+
+    public static boolean isValidProtocolVersion(String protocolVersion) {
+        return Arrays
+            .stream(HttpVersion.values())
+            .map(HttpVersion::toString)
+            .anyMatch(protocolVersion::equals);
     }
 
     public static List<String> getFieldValuesList(String fieldValue) {

@@ -13,6 +13,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.danilomekic.http.server.model.HttpRequest;
+import com.danilomekic.http.server.model.HttpVersion;
+import com.danilomekic.http.server.model.Method;
 import com.danilomekic.http.server.util.HttpMessageUtil;
 
 public class SimpleRequestParser implements RequestParser {
@@ -28,7 +30,13 @@ public class SimpleRequestParser implements RequestParser {
         parseRequestHeaders(inputStream);
         parseRequestBody(inputStream);
 
-        return new HttpRequest(requestLine[0], new URI(requestLine[1]), requestLine[2], requestHeaders, requestBody);
+        return new HttpRequest(
+            Enum.valueOf(Method.class, requestLine[0]),            // Method
+            new URI(requestLine[1]),                               // Target
+            HttpVersion.fromString(requestLine[2]),                // HTTP version
+            requestHeaders,                                        // Headers
+            requestBody                                            // Body
+        );
     }
 
     private void parseRequestLine(InputStream inputStream) throws IOException {
@@ -78,6 +86,10 @@ public class SimpleRequestParser implements RequestParser {
 
         if (HttpMessageUtil.isValidMethod(this.requestLine[0]) == false) {
             throw new BadRequestException("Invalid request method name");
+        }
+
+        if (HttpMessageUtil.isValidProtocolVersion(this.requestLine[2]) == false) {
+            throw new BadRequestException("Invalid request protocol version");
         }
     }
 

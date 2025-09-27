@@ -39,7 +39,7 @@ public class SimpleConnectionHandler implements ConnectionHandler {
             HttpResponse httpResponse = httpRequestRouter
                 .findMatchingRoute(httpRequest)
                 .map(route -> route.handle(httpRequest))
-                .orElse(new HttpResponse(404, "Not Found", "text/plain", "404 Not Found".getBytes()));
+                .orElse(new HttpResponse(httpRequest.httpVersion(), 404, "Not Found", "text/plain", "404 Not Found".getBytes()));
 
             httpResponseWriter.write(httpResponse, socketOutputStream);
         } catch (Exception e) {
