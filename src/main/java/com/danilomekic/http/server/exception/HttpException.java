@@ -2,6 +2,9 @@ package com.danilomekic.http.server.exception;
 
 import com.danilomekic.http.server.model.StatusCode;
 
+/**
+ * Base Exception class for HTTP-related errors. Encapsulates HTTP status code and error details.
+ */
 public class HttpException extends RuntimeException {
     private final StatusCode statusCode;
     private final String errorCode;
