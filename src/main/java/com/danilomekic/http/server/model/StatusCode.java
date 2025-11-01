@@ -1,8 +1,8 @@
 package com.danilomekic.http.server.model;
 
 /*
-* RFC 9110: Section 15
-*/
+ * RFC 9110: Section 15
+ */
 public enum StatusCode {
     // 1XX Informational
     CONTINUE(100, "Continue"),
