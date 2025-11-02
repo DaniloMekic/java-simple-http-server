@@ -1,16 +1,14 @@
 package com.danilomekic.http.server.util;
 
+import com.danilomekic.http.server.model.Method;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.graphql.GraphQlProperties.Http;
-
-import com.danilomekic.http.server.model.HttpVersion;
-import com.danilomekic.http.server.model.Method;
 
 /*
  * RFC 9110
@@ -23,13 +21,12 @@ import com.danilomekic.http.server.model.Method;
  * field-content = field-vchar [ 1*( SP / HTABA / field-vchar ) field-vchar ]
  * field-vchar = VCHAR / obs-text
  * obs-text = %x80-FF
-*/
+ */
 public class HttpMessageUtil {
     private static final Logger LOGGER = LoggerFactory.getLogger(HttpMessageUtil.class);
 
-    private static final Set<Character> DELIMITERS = Set.of(
-        '(', ')', '<', '>', '[', ']', '{', '}',
-        '"', '=', '/', '\\', ':', ';', '?', '@');
+    private static final Set<Character> DELIMITERS =
+            Set.of('(', ')', '<', '>', '[', ']', '{', '}', '"', '=', '/', '\\', ':', ';', '?', '@');
 
     public static boolean isCharacterUSASCII(int codePoint) {
         return Character.UnicodeBlock.of(codePoint) == Character.UnicodeBlock.BASIC_LATIN;
@@ -43,37 +40,25 @@ public class HttpMessageUtil {
      *                  / "+" / "-" / "." / "^" / "_" / "`" / "|" / "~"
      *                  / DIGIT / ALPHA
      *                  ; any VCHAR, except delimiters
-    */
+     */
     public static boolean isValidToken(String fieldName) {
         if (fieldName == null || fieldName.isEmpty()) {
             return false;
         }
 
         return fieldName
-            .chars()
-            .allMatch(c -> c >= 0x21 && c <= 0x7E && !DELIMITERS.contains((char) c));
+                .chars()
+                .allMatch(c -> c >= 0x21 && c <= 0x7E && !DELIMITERS.contains((char) c));
     }
 
     public static boolean isValidMethod(String methodName) {
-        return Arrays
-            .stream(Method.values())
-            .map(Method::name)
-            .anyMatch(methodName::equals);
-        
-    }
-
-    public static boolean isValidProtocolVersion(String protocolVersion) {
-        return Arrays
-            .stream(HttpVersion.values())
-            .map(HttpVersion::toString)
-            .anyMatch(protocolVersion::equals);
+        return Arrays.stream(Method.values()).map(Method::name).anyMatch(methodName::equals);
     }
 
     public static List<String> getFieldValuesList(String fieldValue) {
-        return Arrays
-            .stream(fieldValue.split(","))
-            .filter(s -> !s.isBlank())
-            .map(String::trim)
-            .collect(Collectors.toList());
+        return Arrays.stream(fieldValue.split(","))
+                .filter(s -> !s.isBlank())
+                .map(String::trim)
+                .collect(Collectors.toList());
     }
 }
