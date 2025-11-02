@@ -1,5 +1,7 @@
 package com.danilomekic.http.server.parser;
 
+import com.danilomekic.http.server.exception.BadRequestException;
+import com.danilomekic.http.server.exception.HttpVersionNotSupportedException;
 import com.danilomekic.http.server.model.HttpRequest;
 import com.danilomekic.http.server.model.HttpVersion;
 import com.danilomekic.http.server.model.Method;
@@ -19,6 +21,8 @@ import java.util.Map;
 
 public class SimpleRequestParser implements RequestParser {
     private static final Logger LOGGER = LoggerFactory.getLogger(SimpleRequestParser.class);
+    private static final int CR = 13;
+    private static final int LF = 10;
 
     String[] requestLine;
     Map<String, List<String>> requestHeaders;
@@ -48,13 +52,13 @@ public class SimpleRequestParser implements RequestParser {
         LOGGER.info("Parsing request-line from the stream");
 
         while ((byteRead = inputStream.read()) != -1) {
-            // Incorrect line ending: CRLF
-            if (byteRead == 10 && previousCharWasCR) {
+            // Proper line ending: CRLF
+            if (previousCharWasCR && byteRead == LF) {
                 break; // End of request line
             }
 
             // Incorrect line ending: LF not preceded by CR
-            if (byteRead == 10 && !previousCharWasCR) {
+            if (byteRead == LF && !previousCharWasCR) {
                 throw new BadRequestException("Request-line not properly terminated with <CR><LF>");
             }
 
@@ -63,10 +67,10 @@ public class SimpleRequestParser implements RequestParser {
                         "Request-line contains character that is not from US-ASCII character set");
             }
 
-            if (byteRead == 13) {
+            if (byteRead == CR) {
                 previousCharWasCR = true;
                 continue; // Don't append <CR> to the string; next iteration should check if it's
-                          // followed by <LF>
+                // followed by <LF>
             }
 
             if (previousCharWasCR) {
@@ -86,15 +90,17 @@ public class SimpleRequestParser implements RequestParser {
         if (this.requestLine.length != 3) {
             throw new BadRequestException(
                     "Invalid request-line structure. Should be tripartite: <Method> <Target>"
-                        + " <Version>");
+                            + " <Version>");
         }
 
         if (HttpMessageUtil.isValidMethod(this.requestLine[0]) == false) {
             throw new BadRequestException("Invalid request method name");
         }
 
-        if (HttpMessageUtil.isValidProtocolVersion(this.requestLine[2]) == false) {
-            throw new BadRequestException("Invalid request protocol version");
+        try {
+            HttpVersion.fromString(this.requestLine[2]);
+        } catch (IllegalArgumentException e) {
+            throw new HttpVersionNotSupportedException(this.requestLine[2]);
         }
     }
 
@@ -137,18 +143,18 @@ public class SimpleRequestParser implements RequestParser {
         int byteRead;
 
         while ((byteRead = inputStream.read()) != -1) {
-            // Newline: LF after CR
-            if (byteRead == 10 && previousCharWasCR) {
+            // Proper line ending: CRLF
+            if (previousCharWasCR && byteRead == LF) {
                 break;
             }
 
-            // Check for <CR> without <LF>
-            if (byteRead == 10 && !previousCharWasCR) {
+            // Check for <LF> without <CR>
+            if (byteRead == LF && !previousCharWasCR) {
                 break;
             }
 
             // CR
-            if (byteRead == 13) {
+            if (byteRead == CR) {
                 previousCharWasCR = true;
                 continue; // Don't append <CR>
             }
