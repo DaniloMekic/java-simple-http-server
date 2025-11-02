@@ -1,5 +1,13 @@
 package com.danilomekic.http.server.parser;
 
+import com.danilomekic.http.server.model.HttpRequest;
+import com.danilomekic.http.server.model.HttpVersion;
+import com.danilomekic.http.server.model.Method;
+import com.danilomekic.http.server.util.HttpMessageUtil;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -8,14 +16,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.danilomekic.http.server.model.HttpRequest;
-import com.danilomekic.http.server.model.HttpVersion;
-import com.danilomekic.http.server.model.Method;
-import com.danilomekic.http.server.util.HttpMessageUtil;
 
 public class SimpleRequestParser implements RequestParser {
     private static final Logger LOGGER = LoggerFactory.getLogger(SimpleRequestParser.class);
@@ -31,14 +31,15 @@ public class SimpleRequestParser implements RequestParser {
         parseRequestBody(inputStream);
 
         return new HttpRequest(
-            Enum.valueOf(Method.class, requestLine[0]),            // Method
-            new URI(requestLine[1]),                               // Target
-            HttpVersion.fromString(requestLine[2]),                // HTTP version
-            requestHeaders,                                        // Headers
-            requestBody                                            // Body
-        );
+                Enum.valueOf(Method.class, requestLine[0]), // Method
+                new URI(requestLine[1]), // Target
+                HttpVersion.fromString(requestLine[2]), // HTTP version
+                requestHeaders, // Headers
+                requestBody // Body
+                );
     }
 
+    // Request-line = Method <Space> Target <Space> HTTP-version
     private void parseRequestLine(InputStream inputStream) throws IOException {
         StringBuilder requestLineBuilder = new StringBuilder();
         boolean previousCharWasCR = false;
@@ -58,12 +59,14 @@ public class SimpleRequestParser implements RequestParser {
             }
 
             if (HttpMessageUtil.isCharacterUSASCII(byteRead) == false) {
-                throw new BadRequestException("Request-line contains character that is not from US-ASCII character set");
+                throw new BadRequestException(
+                        "Request-line contains character that is not from US-ASCII character set");
             }
 
             if (byteRead == 13) {
                 previousCharWasCR = true;
-                continue; // Don't append <CR> to the string; next iteration should check if it's followed by <LF>
+                continue; // Don't append <CR> to the string; next iteration should check if it's
+                          // followed by <LF>
             }
 
             if (previousCharWasCR) {
@@ -81,7 +84,9 @@ public class SimpleRequestParser implements RequestParser {
         this.requestLine = requestLineBuilder.toString().split("\\s", 3);
 
         if (this.requestLine.length != 3) {
-            throw new BadRequestException("Invalid request-line structure. Should be tripartite: <Method> <Target> <Version>");
+            throw new BadRequestException(
+                    "Invalid request-line structure. Should be tripartite: <Method> <Target>"
+                        + " <Version>");
         }
 
         if (HttpMessageUtil.isValidMethod(this.requestLine[0]) == false) {
@@ -113,21 +118,16 @@ public class SimpleRequestParser implements RequestParser {
                 throw new BadRequestException("HTTP header does not contain colon character");
             }
 
-            fieldName = fieldLine
-                .substring(0, colonIndex)
-                .trim()
-                .toLowerCase();
+            fieldName = fieldLine.substring(0, colonIndex).trim().toLowerCase();
             if (HttpMessageUtil.isValidToken(fieldName) == false) {
                 throw new IllegalArgumentException("Invalid HTTP header name");
             }
 
-            fieldValue = fieldLine
-                .substring(colonIndex + 1)
-                .trim();
+            fieldValue = fieldLine.substring(colonIndex + 1).trim();
 
             this.requestHeaders
-                .computeIfAbsent(fieldName, key -> new ArrayList<>())
-                .addAll(HttpMessageUtil.getFieldValuesList(fieldValue));
+                    .computeIfAbsent(fieldName, key -> new ArrayList<>())
+                    .addAll(HttpMessageUtil.getFieldValuesList(fieldValue));
         }
     }
 
@@ -162,9 +162,10 @@ public class SimpleRequestParser implements RequestParser {
             lineFromStream.appendCodePoint(byteRead);
         }
 
-        return lineFromStream.length() == 0 || byteRead == -1 // Line is empty or stream has ended (message has no body)
-            ? null
-            : lineFromStream.toString();
+        return lineFromStream.length() == 0
+                        || byteRead == -1 // Line is empty or stream has ended (message has no body)
+                ? null
+                : lineFromStream.toString();
     }
 
     private void parseRequestBody(InputStream inputStream) throws IOException {
@@ -193,9 +194,12 @@ public class SimpleRequestParser implements RequestParser {
 
             // Read exactly Content-Length bytes
             while (totalBytesRead < contentLength) {
-                int bytesRead = inputStream.read(this.requestBody, totalBytesRead, contentLength - totalBytesRead);
+                int bytesRead =
+                        inputStream.read(
+                                this.requestBody, totalBytesRead, contentLength - totalBytesRead);
                 if (bytesRead == -1) {
-                    throw new BadRequestException("Unexpected end of stream while reading request body");
+                    throw new BadRequestException(
+                            "Unexpected end of stream while reading request body");
                 }
                 totalBytesRead += bytesRead;
             }
