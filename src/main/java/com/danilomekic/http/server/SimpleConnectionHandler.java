@@ -47,7 +47,7 @@ public class SimpleConnectionHandler implements ConnectionHandler {
                                             404,
                                             "Not Found",
                                             "text/plain",
-                                            "404 Not Found\n".getBytes()));
+                                            null));
 
             httpResponseWriter.write(httpResponse, socketOutputStream);
         } catch (Exception e) {
