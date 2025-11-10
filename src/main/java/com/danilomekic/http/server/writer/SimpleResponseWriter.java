@@ -1,13 +1,13 @@
 package com.danilomekic.http.server.writer;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.SocketException;
+import com.danilomekic.http.server.model.HttpResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.danilomekic.http.server.model.HttpResponse;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.SocketException;
 
 public class SimpleResponseWriter implements ResponseWriter {
     private static final Logger LOGGER = LoggerFactory.getLogger(SimpleResponseWriter.class);
@@ -17,36 +17,32 @@ public class SimpleResponseWriter implements ResponseWriter {
         try {
             StringBuilder httpResponseBuilder = new StringBuilder();
 
+            // RFC 9112: Section 4 (Status Line)
+            // Status Line = HTTP Version <Space> Status Code <Space> [ Reason Phrase ]
             httpResponseBuilder
-                .append(httpResponse.httpVersion().toString())
-                .append("\s")
-                .append(httpResponse.statusCode())
-                .append("\s")
-                .append(httpResponse.reasonPhrase())
-                .append("\r\n");
+                    .append(httpResponse.httpVersion().toString())
+                    .append("\s")
+                    .append(httpResponse.statusCode())
+                    .append("\s")
+                    .append(httpResponse.reasonPhrase())
+                    .append("\r\n");
 
             // Content-Type header
             httpResponseBuilder
-                .append("Content-Type: ")
-                .append(httpResponse.contentType())
-                .append("\r\n");
+                    .append("Content-Type: ")
+                    .append(httpResponse.contentType())
+                    .append("\r\n");
 
-            // Content-Length
+            // Content-Length header
             byte[] responseBody = httpResponse.responseBody();
             int contentLength = (responseBody != null) ? responseBody.length : 0;
-            httpResponseBuilder
-                .append("Content-Length: ")
-                .append(contentLength)
-                .append("\r\n");
+            httpResponseBuilder.append("Content-Length: ").append(contentLength).append("\r\n");
 
             // Connection header
-            httpResponseBuilder
-                .append("Connection: close")
-                .append("\r\n");
+            httpResponseBuilder.append("Connection: close").append("\r\n");
 
             // Empty line separating headers from the body
-            httpResponseBuilder
-                .append("\r\n");
+            httpResponseBuilder.append("\r\n");
 
             byte[] headerBytes = httpResponseBuilder.toString().getBytes();
             outputStream.write(headerBytes);
